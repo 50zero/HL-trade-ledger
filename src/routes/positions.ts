@@ -41,6 +41,11 @@ export async function positionsRoutes(
             default: false,
             description: 'Filter to only builder-attributed trades',
           },
+          includePrior: {
+            type: 'boolean',
+            default: true,
+            description: 'Include fills before fromMs to reconstruct starting position',
+          },
         },
       },
       response: {

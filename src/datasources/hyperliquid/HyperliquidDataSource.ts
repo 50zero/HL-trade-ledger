@@ -74,6 +74,12 @@ export class HyperliquidDataSource implements IDataSource {
         });
 
         const fills: RawFill[] = response.data || [];
+        if (fills.length > 0) {
+          logger.debug(
+            { sampleFill: fills[0] },
+            'Sample raw fill payload'
+          );
+        }
 
         if (fills.length === 0) {
           break;

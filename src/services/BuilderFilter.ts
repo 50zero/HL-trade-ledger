@@ -13,6 +13,18 @@ export class BuilderFilter {
   }
 
   /**
+   * Extract builder address from a fill if available.
+   */
+  getBuilderAddress(fill: RawFill): string | null {
+    if (!fill.builder) return null;
+    if (typeof fill.builder === 'string') return fill.builder;
+    if (typeof fill.builder === 'object' && typeof fill.builder.b === 'string') {
+      return fill.builder.b;
+    }
+    return null;
+  }
+
+  /**
    * Check if a fill was executed through the target builder.
    * A fill is builder-attributed if:
    * 1. builderFee field exists and is > 0
@@ -23,6 +35,11 @@ export class BuilderFilter {
    */
   isBuilderFill(fill: RawFill): boolean {
     if (!this.targetBuilder) return false;
+
+    const builderAddress = this.getBuilderAddress(fill);
+    if (builderAddress) {
+      return builderAddress.toLowerCase() === this.targetBuilder;
+    }
 
     // builderFee is only present when > 0
     if (!fill.builderFee) return false;

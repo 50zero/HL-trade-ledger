@@ -8,6 +8,7 @@ export interface RawFill {
   closedPnl: string;
   fee: string;
   feeToken: string;
+  builder?: { b: string; f: number } | string;
   builderFee?: string;
   hash: string;
   oid: number;
@@ -106,6 +107,7 @@ export interface TradesQueryParams {
   fromMs?: number;
   toMs?: number;
   builderOnly?: boolean;
+  collapseBy?: 'hash' | 'oid' | 'tid';
 }
 
 export interface PositionsQueryParams {
@@ -114,6 +116,7 @@ export interface PositionsQueryParams {
   fromMs?: number;
   toMs?: number;
   builderOnly?: boolean;
+  includePrior?: boolean;
 }
 
 export interface PnlQueryParams {

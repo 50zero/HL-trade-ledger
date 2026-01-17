@@ -41,6 +41,11 @@ export async function tradesRoutes(
             default: false,
             description: 'Filter to only builder-attributed trades',
           },
+          collapseBy: {
+            type: 'string',
+            enum: ['hash', 'oid', 'tid'],
+            description: 'Collapse fills into unique trades by hash, order id, or trade id',
+          },
         },
       },
       response: {

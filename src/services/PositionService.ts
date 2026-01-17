@@ -29,12 +29,14 @@ export class PositionService {
   ): Promise<PositionsResponse> {
     const fromMs = params.fromMs ?? 0;
     const toMs = params.toMs ?? Date.now();
+    const includePrior = params.includePrior ?? true;
+    const fillStartMs = includePrior ? 0 : fromMs;
 
     // Fetch all fills (including before fromMs to build initial state)
     const fills = await this.tradeService.getRawFills({
       user: params.user,
       coin: params.coin,
-      fromMs: 0, // Start from beginning to reconstruct position
+      fromMs: fillStartMs,
       toMs: toMs,
     });
 

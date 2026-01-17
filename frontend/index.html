@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HL Trade Ledger Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Hyperliquid Trade Ledger</p>
+          <h1>Builder-aware API Console</h1>
+          <p class="lede">
+            Query trades, positions, and leaderboards with a focused UI that keeps
+            builder attribution front and center.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-header">
+            <h2>API Connection</h2>
+            <p>Set the API base URL and persist it for this browser.</p>
+          </div>
+          <form id="base-url-form" class="panel-form">
+            <label>
+              Base URL
+              <input
+                id="base-url-input"
+                name="baseUrl"
+                type="url"
+                placeholder="http://localhost:3000"
+                required
+              />
+            </label>
+            <div class="form-actions">
+              <button type="submit">Save URL</button>
+              <button type="button" id="base-url-reset">Reset</button>
+            </div>
+            <p class="hint">Current base: <span id="base-url-current"></span></p>
+          </form>
+        </div>
+      </header>
+
+      <main>
+        <section class="status-bar">
+          <div class="status-widget" id="status-widget">
+            <div>
+              <p class="status-title">API Live Status</p>
+              <p class="status-subtitle">Auto-pings on load. Tap to refresh.</p>
+            </div>
+            <div class="status-actions">
+              <span id="status-indicator" class="status-indicator idle">unknown</span>
+              <button type="button" id="status-refresh">Ping</button>
+            </div>
+          </div>
+        </section>
+
+        <datalist id="address-list">
+          <option value="0x0e09b56ef137f417e424f1265425e93bfff77e17"></option>
+          <option value="0x186b7610ff3f2e3fd7985b95f525ee0e37a79a74"></option>
+          <option value="0x6c8031a9eb4415284f3f89c0420f697c87168263"></option>
+        </datalist>
+
+        <section class="address-bar">
+          <p>Quick addresses</p>
+          <div class="address-buttons">
+            <button type="button" class="address-button" data-address="0x0e09b56ef137f417e424f1265425e93bfff77e17">0x0e09...7e17</button>
+            <button type="button" class="address-button" data-address="0x186b7610ff3f2e3fd7985b95f525ee0e37a79a74">0x186b...9a74</button>
+            <button type="button" class="address-button" data-address="0x6c8031a9eb4415284f3f89c0420f697c87168263">0x6c80...8263</button>
+          </div>
+        </section>
+
+        <section class="primary-grid">
+          <article class="card wide">
+            <div class="card-header">
+              <h3>Trades</h3>
+              <p>Fetch normalized fills with optional builder-only filtering.</p>
+            </div>
+            <form id="trades-form" class="card-form">
+              <label>
+                User
+                <input name="user" list="address-list" value="0x0e09b56ef137f417e424f1265425e93bfff77e17" required />
+              </label>
+              <div class="two-col">
+                <label>
+                  Coin
+                  <input name="coin" placeholder="BTC" />
+                </label>
+                <label>
+                  Builder only
+                  <input name="builderOnly" type="checkbox" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>
+                  From (ms)
+                  <input name="fromMs" type="number" min="0" placeholder="1704067200000" />
+                </label>
+                <label>
+                  To (ms)
+                  <input name="toMs" type="number" min="0" placeholder="1704153600000" />
+                </label>
+              </div>
+              <div class="range-buttons">
+                <button type="button" class="range-button" data-hours="24">Past 24h</button>
+                <button type="button" class="range-button" data-hours="48">Past 48h</button>
+                <button type="button" class="range-button" data-hours="168">Past 7d</button>
+              </div>
+              <button type="submit">Get Trades</button>
+            </form>
+            <div class="result-toolbar">
+              <span id="trades-meta">Trades: 0</span>
+              <button type="button" class="expand-button" data-target="trades-result">Expand</button>
+            </div>
+            <pre class="result" id="trades-result"></pre>
+          </article>
+
+          <article class="card wide">
+            <div class="card-header">
+              <h3>Positions History</h3>
+              <p>Inspect lifecycle positions and taint status.</p>
+            </div>
+            <form id="positions-form" class="card-form">
+              <label>
+                User
+                <input name="user" list="address-list" value="0x186b7610ff3f2e3fd7985b95f525ee0e37a79a74" required />
+              </label>
+              <div class="two-col">
+                <label>
+                  Coin
+                  <input name="coin" placeholder="BTC" />
+                </label>
+                <label>
+                  Builder only
+                  <input name="builderOnly" type="checkbox" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>
+                  From (ms)
+                  <input name="fromMs" type="number" min="0" placeholder="1704067200000" />
+                </label>
+                <label>
+                  To (ms)
+                  <input name="toMs" type="number" min="0" placeholder="1704153600000" />
+                </label>
+              </div>
+              <div class="range-buttons">
+                <button type="button" class="range-button" data-hours="24">Past 24h</button>
+                <button type="button" class="range-button" data-hours="48">Past 48h</button>
+                <button type="button" class="range-button" data-hours="168">Past 7d</button>
+              </div>
+              <button type="submit">Get Positions</button>
+            </form>
+            <pre class="result" id="positions-result"></pre>
+          </article>
+
+          <article class="card wide">
+            <div class="card-header">
+              <h3>PnL</h3>
+              <p>Return percentage, realized PnL, fees, and taint status.</p>
+            </div>
+            <form id="pnl-form" class="card-form">
+              <label>
+                User
+                <input name="user" list="address-list" value="0x6c8031a9eb4415284f3f89c0420f697c87168263" required />
+              </label>
+              <div class="two-col">
+                <label>
+                  Coin
+                  <input name="coin" placeholder="BTC" />
+                </label>
+                <label>
+                  Builder only
+                  <input name="builderOnly" type="checkbox" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>
+                  From (ms)
+                  <input name="fromMs" type="number" min="0" placeholder="1704067200000" />
+                </label>
+                <label>
+                  To (ms)
+                  <input name="toMs" type="number" min="0" placeholder="1704153600000" />
+                </label>
+              </div>
+              <div class="range-buttons">
+                <button type="button" class="range-button" data-hours="24">Past 24h</button>
+                <button type="button" class="range-button" data-hours="48">Past 48h</button>
+                <button type="button" class="range-button" data-hours="168">Past 7d</button>
+              </div>
+              <label>
+                Max start capital
+                <input name="maxStartCapital" type="number" min="0" placeholder="10000" />
+              </label>
+              <button type="submit">Get PnL</button>
+            </form>
+            <pre class="result" id="pnl-result"></pre>
+          </article>
+        </section>
+
+        <section class="secondary-grid">
+          <article class="card">
+            <div class="card-header">
+              <h3>Leaderboard</h3>
+              <p>Rank users by volume, pnl, or return percentage.</p>
+            </div>
+            <form id="leaderboard-form" class="card-form">
+              <div class="two-col">
+                <label>
+                  Metric
+                  <select name="metric" required>
+                    <option value="pnl">pnl</option>
+                    <option value="volume">volume</option>
+                    <option value="returnPct">returnPct</option>
+                  </select>
+                </label>
+                <label>
+                  Limit
+                  <input name="limit" type="number" min="1" max="200" placeholder="20" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>
+                  Coin
+                  <input name="coin" placeholder="BTC" />
+                </label>
+                <label>
+                  Builder only
+                  <input name="builderOnly" type="checkbox" />
+                </label>
+              </div>
+              <div class="two-col">
+                <label>
+                  From (ms)
+                  <input name="fromMs" type="number" min="0" placeholder="1704067200000" />
+                </label>
+                <label>
+                  To (ms)
+                  <input name="toMs" type="number" min="0" placeholder="1704153600000" />
+                </label>
+              </div>
+              <div class="range-buttons">
+                <button type="button" class="range-button" data-hours="24">Past 24h</button>
+                <button type="button" class="range-button" data-hours="48">Past 48h</button>
+                <button type="button" class="range-button" data-hours="168">Past 7d</button>
+              </div>
+              <label>
+                Max start capital
+                <input name="maxStartCapital" type="number" min="0" placeholder="100000" />
+              </label>
+              <button type="submit">Get Leaderboard</button>
+            </form>
+            <pre class="result" id="leaderboard-result"></pre>
+          </article>
+
+          <article class="card compact-card">
+            <div class="card-header">
+              <h3>Users</h3>
+              <p>Manage registered users for leaderboard tracking.</p>
+            </div>
+            <form id="users-list-form" class="card-form compact">
+              <button type="submit">List Users</button>
+            </form>
+            <form id="users-register-form" class="card-form compact">
+              <label>
+                Register user
+                <input name="user" list="address-list" value="0x0e09b56ef137f417e424f1265425e93bfff77e17" required />
+              </label>
+              <button type="submit">Register</button>
+            </form>
+            <form id="users-delete-form" class="card-form compact">
+              <label>
+                Delete user
+                <input name="user" list="address-list" value="0x0e09b56ef137f417e424f1265425e93bfff77e17" required />
+              </label>
+              <button type="submit" class="danger">Delete</button>
+            </form>
+            <pre class="result" id="users-result"></pre>
+          </article>
+        </section>
+      </main>
+
+      <footer>
+        <p>Built to explore Hyperliquid trade data without touching the backend container.</p>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
