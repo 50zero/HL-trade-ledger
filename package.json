@@ -1,0 +1,30 @@
+{
+  "name": "hyperliquid-trade-ledger",
+  "version": "1.0.0",
+  "description": "Trade ledger API service for Hyperliquid with position history and PnL calculations",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint src/**/*.ts"
+  },
+  "keywords": ["hyperliquid", "trade-ledger", "pnl", "positions"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.28.1",
+    "@fastify/cors": "^9.0.1",
+    "axios": "^1.7.2",
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.3",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

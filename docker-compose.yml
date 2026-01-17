@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hl-trade-ledger
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=3000
+      - TARGET_BUILDER=${TARGET_BUILDER:-}
+      - DATASOURCE_TYPE=${DATASOURCE_TYPE:-hyperliquid}
+      - HYPERLIQUID_BASE_URL=${HYPERLIQUID_BASE_URL:-https://api.hyperliquid.xyz}
+      - CACHE_FILLS_TTL_MS=${CACHE_FILLS_TTL_MS:-60000}
+      - CACHE_CLEARINGHOUSE_TTL_MS=${CACHE_CLEARINGHOUSE_TTL_MS:-5000}
+      - MAX_START_CAPITAL=${MAX_START_CAPITAL:-1000000}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
