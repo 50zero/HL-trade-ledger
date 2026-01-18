@@ -70,7 +70,7 @@ export class HyperliquidDataSource implements IDataSource {
           user: query.user,
           startTime: currentStartTime,
           endTime: endTime,
-          aggregateByTime: false,
+          aggregateByTime: true,
         });
 
         const fills: RawFill[] = response.data || [];

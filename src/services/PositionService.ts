@@ -29,14 +29,12 @@ export class PositionService {
   ): Promise<PositionsResponse> {
     const fromMs = params.fromMs ?? 0;
     const toMs = params.toMs ?? Date.now();
-    const includePrior = params.includePrior ?? true;
-    const fillStartMs = includePrior ? 0 : fromMs;
 
-    // Fetch all fills (including before fromMs to build initial state)
+    // Only fetch fills within the requested time range
     const fills = await this.tradeService.getRawFills({
       user: params.user,
       coin: params.coin,
-      fromMs: fillStartMs,
+      fromMs: fromMs,
       toMs: toMs,
     });
 
@@ -70,8 +68,9 @@ export class PositionService {
   }
 
   /**
-   * Reconstruct position history from fills.
+   * Reconstruct position history from fills within the time range.
    * Uses average cost method for entry price calculation.
+   * Only tracks position changes that occur within fromMs to toMs.
    */
   private reconstructPositionHistory(
     fills: RawFill[],
@@ -85,7 +84,7 @@ export class PositionService {
     // Sort fills by time
     const sortedFills = [...fills].sort((a, b) => a.time - b.time);
 
-    // Position tracking
+    // Position tracking - starts fresh for this time period
     let currentSize = 0;
     let avgEntryPx = 0;
     let totalCost = 0;
@@ -95,8 +94,8 @@ export class PositionService {
     let hasNonBuilderFills = false;
 
     for (const fill of sortedFills) {
-      // Skip fills after toMs
-      if (fill.time > toMs) break;
+      // Only process fills within the time range
+      if (fill.time < fromMs || fill.time > toMs) continue;
 
       // Track builder activity
       const isBuilderFill = this.builderFilter.isBuilderFill(fill);
@@ -135,18 +134,16 @@ export class PositionService {
 
         currentSize = newSize;
 
-        // Record state if within query range
-        if (fill.time >= fromMs) {
-          const tainted = builderOnly && hasBuilderFills && hasNonBuilderFills;
+        // Record state for this fill
+        const tainted = builderOnly && hasBuilderFills && hasNonBuilderFills;
 
-          states.push({
-            timeMs: fill.time,
-            coin,
-            netSize: currentSize,
-            avgEntryPx: avgEntryPx,
-            tainted,
-          });
-        }
+        states.push({
+          timeMs: fill.time,
+          coin,
+          netSize: currentSize,
+          avgEntryPx: avgEntryPx,
+          tainted,
+        });
 
         // If position closed, reset taint tracking for next lifecycle
         if (newSize === 0) {

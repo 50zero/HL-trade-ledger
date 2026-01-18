@@ -116,7 +116,6 @@ export interface PositionsQueryParams {
   fromMs?: number;
   toMs?: number;
   builderOnly?: boolean;
-  includePrior?: boolean;
 }
 
 export interface PnlQueryParams {

@@ -5,22 +5,10 @@ import { buildApp } from './app';
 async function main() {
   const config = getConfig();
 
-  console.log('===========================================');
-  console.log('  Hyperliquid Trade Ledger API');
-  console.log('===========================================');
-  console.log(`  Port: ${config.port}`);
-  console.log(`  Datasource: ${config.datasourceType}`);
-  console.log(`  Target Builder: ${config.targetBuilder || 'Not configured'}`);
-  console.log(`  Max Start Capital: ${config.maxStartCapital}`);
-  console.log(`  Log Level: ${config.logLevel}`);
-  console.log('===========================================\n');
-
-  // Create datasource
   const dataSource = createDataSource(config.datasourceType, {
     baseUrl: config.hyperliquidBaseUrl,
   });
 
-  // Build and start the app
   const app = await buildApp(config, dataSource);
 
   try {
@@ -45,7 +33,6 @@ async function main() {
   }
 }
 
-// Handle graceful shutdown
 process.on('SIGINT', () => {
   console.log('\nShutting down gracefully...');
   process.exit(0);
