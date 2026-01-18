@@ -25,7 +25,7 @@ The API will be available at `http://localhost:3000`
 | `/v1/users` | POST | Register user for leaderboard |
 | `/v1/users/:user` | DELETE | Unregister user |
 
-### Common Query Parameters
+### Example Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
