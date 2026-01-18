@@ -42,7 +42,7 @@ The API will be available at `http://localhost:3000`
 curl http://localhost:3000/health
 
 # Get trades for a wallet
-curl "http://localhost:3000/v1/trades?user=0x0e09b56ef137f417e424f1265425e93bfff77e17"
+curl "http://localhost:3000/v1/trades?user=0x0e09b56ef137f417e424f1265425e93bfff77e17&fromMs=1768604400000"
 
 # Get BTC position history
 curl "http://localhost:3000/v1/positions/history?user=0x...&coin=BTC"
