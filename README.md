@@ -2,7 +2,7 @@
 
 A dockerized API service that provides trade history, reconstructed position timelines, and cumulative PnL calculations for Hyperliquid users. 
 
-## Quick Start (One Command)
+## Quick Start
 
 ```bash
 docker compose up -d
@@ -78,6 +78,15 @@ curl "http://localhost:3000/v1/leaderboard?metric=returnPct&maxStartCapital=1000
 | `MAX_START_CAPITAL` | 1000000 | Default max capital for return calculation |
 | `LOG_LEVEL` | info | Log level (debug, info, warn, error) |
 
+## Frontend
+simple frontend for testing included
+
+```
+cd frontend
+```
+```
+python3 -m http.server 5173
+```
 
 ## PnL Calculation
 
